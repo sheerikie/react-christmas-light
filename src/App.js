@@ -1,6 +1,7 @@
 import React from "react";
 import "./scss/App.scss";
 import Circle from "./Circle";
+import Triangle from "./triangle";
 import { CircleContainer } from './styles';
 import Switch from "react-switch";
 
@@ -52,24 +53,7 @@ class App extends React.Component {
         onSwitch:false,
         broken:false
       },
-      {
-        id: 6,
-        color: "red",
-        size: "50",
-        changeColor: false,
-        changeSize: false,
-        onSwitch: false,
-        broken: false
-      },
-      {
-        id: 7,
-        color: "red",
-        size: "50",
-        changeColor: false,
-        changeSize: false,
-        onSwitch: false,
-        broken: false
-      }
+      
     ],
     playing: false,
     timing: 2,
@@ -125,7 +109,7 @@ class App extends React.Component {
     this.setState({
       value: !value
     });
-    if(value==true){
+    if(value===true){
       target=1;
     }
     if (e.keyCode === 13) {
@@ -181,6 +165,7 @@ class App extends React.Component {
       <CircleContainer>
       {
               this.loadFromLocalStorage('bubbles').map(bubble => (
+                
                 <Circle
                   key={bubble.id + i }
                   id={bubble.id}
@@ -201,6 +186,7 @@ class App extends React.Component {
               ))
         }
       </CircleContainer>,
+      <Triangle></Triangle>
     )
   }
 return circleHolder;
@@ -329,7 +315,7 @@ return circleHolder;
         <input
           onChange={(event) => this.handleCircleRowsInputChange(event)}
           value={this.circleRowsAmount}
-          className="line"
+          className="line" data-test="add-row"
         />
       
         <div className="button-wrapper">
@@ -342,7 +328,7 @@ return circleHolder;
           <button className="add" onClick={this.handleAdd}>
             Add Bubble
           </button>
-          <button className="remove" onClick={this.handleRemove}>
+          <button className="remove" data-test="remove-bulb" onClick={this.handleRemove}>
             Remove Bubble
           </button>
 
