@@ -7,14 +7,14 @@ class Circle extends React.Component {
         className={
           (this.props.changeColor ? "circle__color--show" : "") +
           (this.props.changeSize ? " circle__size--show" : "") +
-          "circle"
+          " circle"
         }
         style={{
           backgroundColor: this.props.color,
           height: this.props.size + "px",
           width: this.props.size + "px",
-          opacity: this.props.opacity,
-          animation: (this.props.broken || this.props.onSwitch)? "none":null
+          animation: (this.props.broken || this.props.onSwitch)? "none":null,
+          opacity: this.props.opacity
         }}
         onClick={() => this.props.handleCircleClick(this.props.id)}
         onBlur={() => this.props.handleBlur(this.props.id)}
@@ -80,7 +80,7 @@ class Circle extends React.Component {
           />
             <button onClick={e => this.props.handleChangeOnOff(this.props.id, e)}>On / Off</button>
         </div>
-      
+        
       </div>
     );
   }

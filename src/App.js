@@ -1,6 +1,8 @@
 import React from "react";
 import "./scss/App.scss";
 import Circle from "./Circle";
+import { CircleContainer } from './styles';
+import Switch from "react-switch";
 
 class App extends React.Component {
   state = {
@@ -72,10 +74,26 @@ class App extends React.Component {
     playing: false,
     timing: 2,
     circleRowsAmount:1,
-
-   
+    value:false
   };
   
+  saveToLocalStorage = (strName,state) => {
+    try {
+      localStorage.setItem(strName, JSON.stringify(state));
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  
+  loadFromLocalStorage = (strName) => {
+    try {
+      const stateStr = localStorage.getItem(strName);
+      return stateStr ? JSON.parse(stateStr) : this.state.bubbles;
+    } catch (e) {
+      console.error(e);
+      return undefined;
+    }
+  };
 
   reset = id => {
     const bubbles = [...this.state.bubbles];
@@ -89,17 +107,29 @@ class App extends React.Component {
     this.setState({
       playing: true
     });
+    console.log("onAnimationEnd called");
   };
 
   handleStop = () => {
     this.setState({
       playing: false
     });
+    console.log("onAnimationEnd stopped");
   };
 
   handleKeyDown = e => {
+    console.log("size updated");
+    let value=this.state.value;
+    let target=2;
+ 
+    this.setState({
+      value: !value
+    });
+    if(value==true){
+      target=1;
+    }
     if (e.keyCode === 13) {
-      this.setAnimationTiming(e.target.value);
+      this.setAnimationTiming(target);
     }
   };
 
@@ -114,6 +144,7 @@ class App extends React.Component {
     bubbles[id - 1].changeColor = true;
     bubbles[id - 1].changeSize = true;
     this.setState({ bubbles });
+    console.log("circle clicked");
   };
 
   handleSizeClick = e => {
@@ -127,11 +158,13 @@ class App extends React.Component {
     newBubbles[id - 1].color = color;
     this.setState({ bubbles: newBubbles });
     this.reset(id);
+    console.log("circle color clicked");
   };
   handleCircleRowsInputChange = (event) => {
     const circleRowsAmountText = event.target.value
 
     this.setState({ circleRowsAmount: circleRowsAmountText });
+    console.log("line updated");
 
   };
   filter = (array, id) => {
@@ -141,7 +174,62 @@ class App extends React.Component {
     return newItem;
   };
 
+  addRow=()=>{
+  const circleHolder = []
+  for (let i = 0; i < this.state.circleRowsAmount; i += 1) {
+    circleHolder.push(
+      <CircleContainer>
+      {
+              this.loadFromLocalStorage('bubbles').map(bubble => (
+                <Circle
+                  key={bubble.id + i }
+                  id={bubble.id}
+                  color={bubble.color}
+                  size={bubble.size}
+                  broken ={bubble.broken}
+                  onSwitch ={bubble.onSwitch}
+                  changeColor={bubble.changeColor}
+                  changeSize={bubble.changeSize}
+                  handleSizeChange={this.handleSizeChange}
+                  handleChangeBroken={this.handleChangeBroken}
+                  handleChangeOnOff={this.handleChangeOnOff}
+                  handleCircleColorClick={this.handleCircleColorClick}
+                  handleBlur={this.handleBlur}
+                  handleCircleClick={this.handleCircleClick}
+                  handleSizeClick={this.handleSizeClick}
+                />
+              ))
+        }
+      </CircleContainer>,
+    )
+  }
+return circleHolder;
+  }
 
+  handleChangeBroken = (id, e) => {
+    e.stopPropagation();
+    const bubbles = [...this.state.bubbles];
+    this.saveToLocalStorage('bubbles',bubbles);
+    bubbles.filter(bubble => {
+      return bubble.id === id? bubble.broken = true:bubble.broken;
+    });
+    this.setState({ bubbles });
+    console.log(bubbles);
+    this.reset(id);
+  };
+
+  handleChangeOnOff = (id, e) => {
+    e.stopPropagation();
+    const bubbles = [...this.state.bubbles];
+    this.saveToLocalStorage('bubbles',bubbles);
+    
+    bubbles.filter(bubble => {
+      return bubble.id === id? bubble.onSwitch = !bubble.onSwitch:bubble.onSwitch;
+    });
+    this.setState({ bubbles });
+    console.log(bubbles);
+    this.reset(id);
+  };
 
   handleSizeChange = (id, e) => {
     e.stopPropagation();
@@ -154,6 +242,7 @@ class App extends React.Component {
         this.reset(id);
       }
     }
+   
   };
 
   handleBlur = id => {
@@ -174,6 +263,7 @@ class App extends React.Component {
     });
 
     this.setState({ bubbles });
+    console.log("bulb added");
   };
 
   handleRemove = () => {
@@ -185,6 +275,7 @@ class App extends React.Component {
     } else {
       alert("Must have at least one bubble. Cannot remove all bubbles.");
     }
+    console.log("bulb removed");
   };
 
   setAnimationTiming = timing => {
@@ -210,44 +301,39 @@ class App extends React.Component {
   };
 
 
+  componentDidMount() {
+    // this.setAnimationTiming(this.state.timing);
+    // console.log('hekk',this.loadFromLocalStorage('bubbles'));
+    // console.log(this.state.playing,'playin')
+  }
+
   render() {
     return (
       <div className="App">
         <header className="App-header" />
         <div
           className={(this.state.playing ? "animate" : "") + " circleWrapper"}
+          style={{marginLeft:'15%',marginRight:'15%'}}
         >
-         <div>
-      {
-              this.loadFromLocalStorage('bubbles').map(bubble => (
-                <Circle
-                  key={bubble.id }
-                  id={bubble.id }
-                  color={bubble.color}
-                  size={bubble.size}
-                  broken ={bubble.broken}
-                  onSwitch ={bubble.onSwitch}
-                  changeColor={bubble.changeColor}
-                  changeSize={bubble.changeSize}
-                  handleSizeChange={this.handleSizeChange}
-                  handleChangeBroken={this.handleChangeBroken}
-                  handleChangeOnOff={this.handleChangeOnOff}
-                  handleCircleColorClick={this.handleCircleColorClick}
-                  handleBlur={this.handleBlur}
-                  handleCircleClick={this.handleCircleClick}
-                  handleSizeClick={this.handleSizeClick}
-                />
-              ))
-        }
-      <div>,
+           <h3>Switch Pattern: <b style={{color:'green'}}>[Green:Even; Gray:Odd]</b> </h3> 
+           <br></br>
+           <Switch checked={this.state.value}  onChange={this.handleKeyDown}  className="size"/>
+           {this.state.value?<p>The Pattern is Even</p>:<p>The Pattern is Odd</p>} 
+        <br></br>
+             {this.addRow()}
+            
         </div>
-        <span>Number Of Lines</span>
-      <input
-        onChange={(event) => this.handleCircleRowsInputChange(event)}
-        value={this.circleRowsAmount}
-      />
+        <br></br>
+        <span>Number Of Rows: </span>
+     
+        <input
+          onChange={(event) => this.handleCircleRowsInputChange(event)}
+          value={this.circleRowsAmount}
+          className="line"
+        />
+      
         <div className="button-wrapper">
-          <button className="play" onClick={this.handleStart}>
+          <button className="play" onClick={this.handleStart} >
             Play
           </button>
           <button className="stop" onClick={this.handleStop}>
@@ -259,7 +345,8 @@ class App extends React.Component {
           <button className="remove" onClick={this.handleRemove}>
             Remove Bubble
           </button>
-          <input type="number" onKeyDown={this.handleKeyDown} />
+
+          
         </div>
         </div>
     );
