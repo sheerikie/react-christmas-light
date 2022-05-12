@@ -299,7 +299,7 @@ return circleHolder;
         <header className="App-header" />
         <div
           className={(this.state.playing ? "animate" : "") + " circleWrapper"}
-          style={{marginLeft:'15%',marginRight:'15%'}}
+          style={{display:'inline-block',justifyContent:'center'}}
         >
            <h3>Switch Pattern: <b style={{color:'green'}}>[Green:Even; Gray:Odd]</b> </h3> 
            <br></br>
