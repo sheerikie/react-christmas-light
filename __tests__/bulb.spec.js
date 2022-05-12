@@ -1,15 +1,6 @@
 /// <reference types="cypress" />
 
-// Welcome to Cypress!
-//
-// This spec file contains a variety of sample tests
-// for a todo list app that are designed to demonstrate
-// the power of writing tests in Cypress.
-//
-// To learn more about how Cypress works and
-// what makes it such an awesome testing tool,
-// please read our getting started guide:
-// https://on.cypress.io/introduction-to-cypress
+
 
 describe('React Christmas Lights', () => {
   beforeEach(() => {
@@ -57,7 +48,36 @@ describe('React Christmas Lights', () => {
     cy.get('.circle')
       .should('have.length', 5)
       .first()
-
   })
+
+
+  it('enables animations', () => {
+    cy.contains('Play').click();
+          cy.get('body')
+          .invoke('attr', 'style', 'transition: all')
+          .should('have.attr', 'style', 'transition: all')
+  })
+  it('disables animations', () => {
+
+    cy.contains('Stop').click();
+    cy.get('body')
+    .invoke('attr', 'style', 'transition: none')
+    .should('have.attr', 'style', 'transition: none')
+})
+
+it('enables animations', () => {
+  cy.contains('Play').click();
+        cy.get('body')
+        .invoke('attr', 'style', 'animation: all')
+        .should('have.attr', 'style', 'animation: all')
+})
+it('disables animations', () => {
+
+  cy.contains('Stop').click();
+  cy.get('body')
+  .invoke('attr', 'style', 'animation: none')
+  .should('have.attr', 'style', 'animation: none')
+})
+
 
 })
