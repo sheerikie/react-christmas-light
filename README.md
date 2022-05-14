@@ -25,3 +25,7 @@ Launches Cypress Tests
 
 1. docker build -f Dockerfile -t react-christams-light-app .
 2. docker run -it -p 4001:3000 react-christams-light-app
+
+# How to use the app
+
+1. Incase you need to change color or turn the bulb ON/OFF ,double Click on the bulb,If you need to change size,use the input text inside the circle and press Enter
