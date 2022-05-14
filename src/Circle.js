@@ -31,7 +31,7 @@ class Circle extends React.Component {
           className="circle__color circle__color--blue"
           data-color="blue"
           onClick={e => this.props.handleCircleColorClick(this.props.id, e)}
-          >sdpl;l;;</div>
+          />
         <div
           className="circle__color circle__color--cyan"
           data-color="cyan"
